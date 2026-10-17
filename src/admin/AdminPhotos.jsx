@@ -270,7 +270,6 @@ export default function AdminPhotos({ photos, albums, onPhotosUpdated }) {
                 <th className="py-3 px-4">Frame</th>
                 <th className="py-3 px-4">Title & Story</th>
                 <th className="py-3 px-4">Album</th>
-                <th className="py-3 px-4">Camera & EXIF</th>
                 <th className="py-3 px-4">Location</th>
                 <th className="py-3 px-4 text-center">Likes</th>
                 <th className="py-3 px-4 text-right">Actions</th>
@@ -308,12 +307,6 @@ export default function AdminPhotos({ photos, albums, onPhotosUpdated }) {
                       <span className="px-2 py-0.5 rounded bg-stone-100 text-stone-700 text-[11px]">
                         {album?.title || 'Unassigned'}
                       </span>
-                    </td>
-
-                    {/* Camera */}
-                    <td className="py-3 px-4 text-[11px] text-stone-600">
-                      <div>{photo.camera}</div>
-                      <div className="text-stone-400">{photo.lens} · {photo.aperture}</div>
                     </td>
 
                     {/* Location */}
@@ -453,81 +446,6 @@ export default function AdminPhotos({ photos, albums, onPhotosUpdated }) {
                     onChange={(e) => setForm({ ...form, captureDate: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded border border-stone-200 text-stone-900 text-sm"
                   />
-                </div>
-              </div>
-
-              {/* Technical EXIF fields */}
-              <div className="p-4 bg-stone-100/70 rounded border border-stone-200 space-y-3">
-                <span className="text-xs font-mono uppercase tracking-wider text-stone-700 block font-semibold">
-                  Camera Gear & EXIF Technical Data
-                </span>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-[10px] font-mono uppercase text-stone-500 mb-0.5">Camera</label>
-                    <input
-                      type="text"
-                      value={form.camera}
-                      onChange={(e) => setForm({ ...form, camera: e.target.value })}
-                      placeholder="Sony A7 IV"
-                      className="w-full px-2.5 py-1.5 rounded border border-stone-200 text-xs font-mono"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-mono uppercase text-stone-500 mb-0.5">Lens</label>
-                    <input
-                      type="text"
-                      value={form.lens}
-                      onChange={(e) => setForm({ ...form, lens: e.target.value })}
-                      placeholder="FE 35mm f/1.4 GM"
-                      className="w-full px-2.5 py-1.5 rounded border border-stone-200 text-xs font-mono"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-mono uppercase text-stone-500 mb-0.5">Aperture</label>
-                    <input
-                      type="text"
-                      value={form.aperture}
-                      onChange={(e) => setForm({ ...form, aperture: e.target.value })}
-                      placeholder="ƒ/1.4"
-                      className="w-full px-2.5 py-1.5 rounded border border-stone-200 text-xs font-mono"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-mono uppercase text-stone-500 mb-0.5">Shutter Speed</label>
-                    <input
-                      type="text"
-                      value={form.shutterSpeed}
-                      onChange={(e) => setForm({ ...form, shutterSpeed: e.target.value })}
-                      placeholder="1/250s"
-                      className="w-full px-2.5 py-1.5 rounded border border-stone-200 text-xs font-mono"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-mono uppercase text-stone-500 mb-0.5">ISO</label>
-                    <input
-                      type="text"
-                      value={form.iso}
-                      onChange={(e) => setForm({ ...form, iso: e.target.value })}
-                      placeholder="100"
-                      className="w-full px-2.5 py-1.5 rounded border border-stone-200 text-xs font-mono"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-mono uppercase text-stone-500 mb-0.5">Film Stock / Recipe</label>
-                    <input
-                      type="text"
-                      value={form.filmSimulation}
-                      onChange={(e) => setForm({ ...form, filmSimulation: e.target.value })}
-                      placeholder="Cinestill 800T"
-                      className="w-full px-2.5 py-1.5 rounded border border-stone-200 text-xs font-mono"
-                    />
-                  </div>
                 </div>
               </div>
 

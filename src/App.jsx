@@ -332,12 +332,6 @@ export default function App() {
           <>
             <Hero
               settings={settings}
-              photoCount={photos.length}
-              albumCount={albums.length}
-              selectedCategory={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
             />
 
             <AlbumGrid
@@ -352,8 +346,7 @@ export default function App() {
             />
 
             <PhotoGrid
-              photos={filteredPhotos}
-              selectedCategory={selectedCategory}
+              photos={photos}
               onPhotoClick={(photo) => setActivePhoto(photo)}
               onLikePhoto={handleLikePhoto}
               likedPhotoIds={likedPhotoIds}

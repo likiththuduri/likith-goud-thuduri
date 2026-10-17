@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, ArrowRight, ShieldCheck, Sparkles, Key } from 'lucide-react';
+import { Lock, ArrowRight } from 'lucide-react';
 import { api } from '../api';
 
 export default function AdminLogin({ onLoginSuccess, onCancel }) {
@@ -23,11 +23,6 @@ export default function AdminLogin({ onLoginSuccess, onCancel }) {
     }
   };
 
-  const handleFillDemo = () => {
-    setUsername('admin');
-    setPassword('likith2026!');
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/80 backdrop-blur-md p-4 animate-fadeIn">
       <div className="bg-[#FAF9F6] border border-stone-300 rounded-sm max-w-md w-full p-8 shadow-2xl relative">
@@ -38,26 +33,10 @@ export default function AdminLogin({ onLoginSuccess, onCancel }) {
             <Lock size={20} />
           </div>
           <h2 className="font-editorial text-3xl text-stone-900 font-normal">Admin Studio</h2>
-          <p className="text-stone-500 text-xs font-mono mt-1">Authenticate to customize your photography portfolio</p>
+          <p className="text-stone-500 text-xs font-mono mt-1">Authenticate to manage your visual captures portfolio</p>
         </div>
 
-        {/* Demo Helper Banner */}
-        <div className="mb-6 p-3.5 bg-stone-100 rounded border border-stone-200 text-xs text-stone-700 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Key size={14} className="text-stone-900" />
-            <div>
-              <span className="font-semibold block text-stone-900">Default Access</span>
-              <span className="font-mono text-[11px] text-stone-600">Password: likith2026!</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={handleFillDemo}
-            className="px-2.5 py-1 bg-stone-900 text-stone-100 rounded text-[11px] font-mono hover:bg-stone-800 transition-colors"
-          >
-            Auto Fill
-          </button>
-        </div>
+
 
         {error && (
           <div className="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded">

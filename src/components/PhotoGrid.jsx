@@ -24,12 +24,7 @@ export default function PhotoGrid({
           </h2>
         </div>
         <div className="flex items-center space-x-2 text-xs font-mono text-stone-500 mt-2 md:mt-0">
-          <span>Displaying {photos.length} frames</span>
-          {selectedCategory !== 'all' && (
-            <span className="bg-stone-200 px-2 py-0.5 rounded text-stone-800">
-              Filtering: {selectedCategory}
-            </span>
-          )}
+          <span>{photos.length} Captures</span>
         </div>
       </div>
 
@@ -87,10 +82,10 @@ export default function PhotoGrid({
                 {/* Always-visible subtle bottom info on mobile; hover overlay on desktop */}
                 <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4 sm:p-5 text-white">
                   
-                  {/* Top Bar: Film stock & Like Button */}
+                  {/* Top Bar: Category badge & Like Button */}
                   <div className="flex justify-between items-start">
                     <span className="text-[11px] font-mono tracking-wider uppercase bg-black/40 backdrop-blur-md px-2.5 py-1 rounded text-stone-200 border border-white/10">
-                      {photo.filmSimulation || photo.camera || '35mm'}
+                      {photo.category || 'Capture'}
                     </span>
 
                     <button
@@ -129,12 +124,12 @@ export default function PhotoGrid({
                       </p>
                     )}
 
-                    {/* Camera Specs Bar */}
+                    {/* Details bar */}
                     <div className="flex items-center justify-between text-[11px] font-mono text-stone-300 pt-2 border-t border-white/20">
-                      <span>{photo.lens || photo.focalLength || 'Prime Lens'}</span>
+                      <span>{photo.location || photo.captureDate || 'Capture'}</span>
                       <span className="flex items-center text-white/90">
                         <Maximize2 size={12} className="mr-1" />
-                        Inspect Details
+                        View Full Frame
                       </span>
                     </div>
                   </div>

@@ -87,7 +87,7 @@ export default function AlbumDetail({ album, photos, onBack, onPhotoClick, onLik
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4 sm:p-5 text-white">
                   <div className="flex justify-between items-start">
                     <span className="text-[11px] font-mono tracking-wider uppercase bg-black/40 backdrop-blur-md px-2 py-0.5 rounded">
-                      {photo.camera || '35mm'}
+                      {photo.category || 'Capture'}
                     </span>
                     <button
                       onClick={(e) => {
