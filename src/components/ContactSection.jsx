@@ -46,14 +46,14 @@ export default function ContactSection({ settings }) {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-stone-200 pb-5">
         <div>
           <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#78716C] mb-2 block">
-            06 / Communication
+            04 / Communication
           </span>
           <h2 className="font-editorial text-3xl sm:text-4xl text-[#1C1917] font-normal">
             Get in Touch
           </h2>
         </div>
         <p className="text-stone-500 text-sm max-w-md mt-2 md:mt-0 font-normal">
-          Available for selected portrait sessions, editorial commissions, travel assignments, or print inquiries.
+          Available for collaborations, inquiries, or just saying hello from Instagram.
         </p>
       </div>
 

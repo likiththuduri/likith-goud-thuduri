@@ -5,8 +5,6 @@ import AlbumGrid from './components/AlbumGrid';
 import AlbumDetail from './components/AlbumDetail';
 import PhotoGrid from './components/PhotoGrid';
 import LightboxModal from './components/LightboxModal';
-import StoriesSection from './components/StoriesSection';
-import GuestbookSection from './components/GuestbookSection';
 import AboutSection from './components/AboutSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
@@ -18,20 +16,16 @@ import AdminOverview from './admin/AdminOverview';
 import AdminBranding from './admin/AdminBranding';
 import AdminAlbums from './admin/AdminAlbums';
 import AdminPhotos from './admin/AdminPhotos';
-import AdminStories from './admin/AdminStories';
-import AdminGuestbook from './admin/AdminGuestbook';
 import AdminSettings from './admin/AdminSettings';
 
 import { api } from './api';
-import { Settings, Plus, Camera, Layers, BookOpen, LogOut, ShieldCheck } from 'lucide-react';
+import { Settings, Plus, Camera, Layers, LogOut } from 'lucide-react';
 
 export default function App() {
   // App Data State
   const [settings, setSettings] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [photos, setPhotos] = useState([]);
-  const [stories, setStories] = useState([]);
-  const [guestbook, setGuestbook] = useState([]);
   const [inquiries, setInquiries] = useState([]);
   const [adminStats, setAdminStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,19 +56,15 @@ export default function App() {
   // Fetch all initial data
   const loadData = async () => {
     try {
-      const [sData, aData, pData, stData, gData] = await Promise.all([
+      const [sData, aData, pData] = await Promise.all([
         api.getSettings(),
         api.getAlbums(),
-        api.getPhotos(),
-        api.getStories(),
-        api.getGuestbook(true)
+        api.getPhotos()
       ]);
 
       setSettings(sData);
       setAlbums(aData);
       setPhotos(pData);
-      setStories(stData);
-      setGuestbook(gData);
 
       // Check admin status
       const auth = await api.verifyAuth();
@@ -134,15 +124,6 @@ export default function App() {
     } catch (err) {
       console.error('Failed to record like on server:', err);
     }
-  };
-
-  // Add Guestbook entry
-  const handleAddGuestbookEntry = async (entry) => {
-    const res = await api.addGuestbookEntry(entry);
-    if (res.entry) {
-      setGuestbook(prev => [res.entry, ...prev]);
-    }
-    return res;
   };
 
   // Lightbox Navigation
@@ -219,38 +200,6 @@ export default function App() {
     }
   };
 
-  const handleDirectEditStory = (story) => {
-    setAdminTab('stories');
-    setViewMode('admin');
-  };
-
-  const handleDirectDeleteStory = async (id, title) => {
-    if (!window.confirm(`Delete essay "${title}" permanently?`)) return;
-    try {
-      await api.deleteStory(id);
-      const updated = await api.getStories();
-      setStories(updated);
-    } catch (err) {
-      alert('Failed to delete story');
-    }
-  };
-
-  const handleDirectEditGuestbook = (entry) => {
-    setAdminTab('guestbook');
-    setViewMode('admin');
-  };
-
-  const handleDirectDeleteGuestbook = async (id, name) => {
-    if (!window.confirm(`Delete guestbook note from "${name}"?`)) return;
-    try {
-      await api.deleteGuestbookEntry(id);
-      const updated = await api.getGuestbook(true);
-      setGuestbook(updated);
-    } catch (err) {
-      alert('Failed to delete entry');
-    }
-  };
-
   // Admin access handler
   const handleOpenAdmin = () => {
     if (isAdminLoggedIn) {
@@ -306,7 +255,6 @@ export default function App() {
             onNavigate={setAdminTab}
             photos={photos}
             albums={albums}
-            guestbook={guestbook}
             inquiries={inquiries}
           />
         )}
@@ -333,29 +281,6 @@ export default function App() {
             onPhotosUpdated={async () => {
               const updated = await api.getPhotos();
               setPhotos(updated);
-            }}
-          />
-        )}
-        {adminTab === 'stories' && (
-          <AdminStories
-            stories={stories}
-            onStoriesUpdated={async () => {
-              const updated = await api.getStories();
-              setStories(updated);
-            }}
-          />
-        )}
-        {adminTab === 'guestbook' && (
-          <AdminGuestbook
-            guestbook={guestbook}
-            inquiries={inquiries}
-            onGuestbookUpdated={async () => {
-              const updated = await api.getGuestbook(true);
-              setGuestbook(updated);
-            }}
-            onInquiriesUpdated={async () => {
-              const updated = await api.getInquiries();
-              setInquiries(updated);
             }}
           />
         )}
@@ -437,21 +362,6 @@ export default function App() {
               isAdmin={isAdminLoggedIn}
               onEditPhoto={handleDirectEditPhoto}
               onDeletePhoto={handleDirectDeletePhoto}
-            />
-
-            <StoriesSection
-              stories={stories}
-              isAdmin={isAdminLoggedIn}
-              onEditStory={handleDirectEditStory}
-              onDeleteStory={handleDirectDeleteStory}
-            />
-
-            <GuestbookSection
-              guestbook={guestbook.filter(g => g.status === 'approved')}
-              onAddEntry={handleAddGuestbookEntry}
-              isAdmin={isAdminLoggedIn}
-              onEditEntry={handleDirectEditGuestbook}
-              onDeleteEntry={handleDirectDeleteGuestbook}
             />
 
             <AboutSection

@@ -17,9 +17,7 @@ export default function Navbar({ settings, onAdminClick, activeSection, onNaviga
   const navLinks = [
     { name: 'Albums', href: '#albums', id: 'albums', icon: Compass },
     { name: 'Gallery', href: '#gallery', id: 'gallery', icon: Camera },
-    { name: 'Stories', href: '#stories', id: 'stories', icon: BookOpen },
     { name: 'About', href: '#about', id: 'about', icon: User },
-    { name: 'Guestbook', href: '#guestbook', id: 'guestbook', icon: MessageSquare },
     { name: 'Contact', href: '#contact', id: 'contact', icon: Send },
   ];
 

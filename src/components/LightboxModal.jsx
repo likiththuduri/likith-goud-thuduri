@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   X, ChevronLeft, ChevronRight, Heart, Share2, Download,
-  MapPin, Calendar, Camera, Aperture, Clock, Zap, Info, Check, Sparkles, Edit2, Trash2
+  MapPin, Calendar, Camera, Info, Check, Edit2, Trash2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -222,41 +222,32 @@ export default function LightboxModal({
                 )}
               </div>
 
-              {/* EXIF Photography Metadata Card */}
-              <div className="bg-stone-950/70 border border-stone-800/80 rounded p-4 space-y-3 font-mono text-xs">
+              {/* Capture Details Card */}
+              <div className="bg-stone-950/70 border border-stone-800/80 rounded p-4 space-y-2 font-mono text-xs">
                 <div className="flex items-center justify-between border-b border-stone-800 pb-2 text-stone-400 uppercase tracking-wider text-[11px]">
-                  <span className="flex items-center space-x-1.5">
-                    <Camera size={13} />
-                    <span>Camera Gear Specs</span>
-                  </span>
-                  <span>EXIF</span>
+                  <span>Frame Details</span>
+                  <span className="text-stone-500">Archive</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 text-stone-300 pt-1">
-                  <div>
-                    <span className="text-[10px] text-stone-500 block uppercase">Camera</span>
-                    <span className="text-stone-200">{photo.camera || 'Sony A7 IV'}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-stone-500 block uppercase">Lens</span>
-                    <span className="text-stone-200">{photo.lens || '35mm Prime'}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-stone-500 block uppercase">Aperture</span>
-                    <span className="text-stone-200">{photo.aperture || 'ƒ/1.4'}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-stone-500 block uppercase">Shutter</span>
-                    <span className="text-stone-200">{photo.shutterSpeed || '1/250s'}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-stone-500 block uppercase">ISO</span>
-                    <span className="text-stone-200">{photo.iso || '100'}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-stone-500 block uppercase">Focal Length</span>
-                    <span className="text-stone-200">{photo.focalLength || '35mm'}</span>
-                  </div>
+                <div className="space-y-1.5 text-stone-300 pt-1 text-xs">
+                  {photo.category && (
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Category:</span>
+                      <span className="text-stone-200">{photo.category}</span>
+                    </div>
+                  )}
+                  {photo.location && (
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Location:</span>
+                      <span className="text-stone-200">{photo.location}</span>
+                    </div>
+                  )}
+                  {photo.captureDate && (
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Date:</span>
+                      <span className="text-stone-200">{photo.captureDate}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

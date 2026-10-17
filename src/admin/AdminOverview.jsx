@@ -1,13 +1,12 @@
 import React from 'react';
-import { Camera, Layers, Heart, MessageSquare, Mail, Plus, ArrowUpRight, CheckCircle2, Sliders } from 'lucide-react';
+import { Camera, Layers, Heart, Mail, Plus, ArrowUpRight, Sliders, ExternalLink } from 'lucide-react';
 
-export default function AdminOverview({ stats, onNavigate, photos, albums, guestbook, inquiries }) {
+export default function AdminOverview({ stats, onNavigate, photos, albums, inquiries }) {
   const statCards = [
     { title: 'Total Frames', value: photos?.length || 0, icon: Camera, color: 'text-stone-900', target: 'photos' },
     { title: 'Curated Albums', value: albums?.length || 0, icon: Layers, color: 'text-stone-900', target: 'albums' },
     { title: 'Public Likes', value: stats?.totalLikes || 0, icon: Heart, color: 'text-rose-500', target: 'photos' },
-    { title: 'Guestbook Notes', value: guestbook?.length || 0, icon: MessageSquare, color: 'text-amber-600', target: 'guestbook' },
-    { title: 'Inquiries', value: inquiries?.length || 0, icon: Mail, color: 'text-blue-600', target: 'guestbook' }
+    { title: 'Direct Inquiries', value: inquiries?.length || 0, icon: Mail, color: 'text-blue-600', target: 'branding' }
   ];
 
   return (
@@ -20,7 +19,7 @@ export default function AdminOverview({ stats, onNavigate, photos, albums, guest
             Studio Dashboard Overview
           </h2>
           <p className="text-stone-500 text-xs font-mono mt-1">
-            Real-time analytics and management controls for your photography portfolio.
+            Real-time analytics and management controls for your visual captures portfolio.
           </p>
         </div>
 
@@ -45,7 +44,7 @@ export default function AdminOverview({ stats, onNavigate, photos, albums, guest
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {statCards.map((card, idx) => (
           <div
             key={idx}
@@ -63,13 +62,13 @@ export default function AdminOverview({ stats, onNavigate, photos, albums, guest
         ))}
       </div>
 
-      {/* Two Column Layout: Recent Captures + Guestbook Notes */}
+      {/* Two Column Layout: Recent Captures + Albums Summary */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Recent Captures */}
         <div className="lg:col-span-7 bg-white p-6 rounded-sm border border-stone-200/90 shadow-subtle space-y-4">
           <div className="flex justify-between items-center border-b border-stone-100 pb-3">
-            <h3 className="font-editorial text-lg text-stone-900 font-normal">Recent Captures</h3>
+            <h3 className="font-editorial text-lg text-stone-900 font-normal">Recent Uploads</h3>
             <button
               onClick={() => onNavigate('photos')}
               className="text-xs font-mono text-stone-500 hover:text-stone-900 flex items-center space-x-1"
@@ -95,32 +94,45 @@ export default function AdminOverview({ stats, onNavigate, photos, albums, guest
           </div>
         </div>
 
-        {/* Latest Guestbook Entries */}
+        {/* Curated Albums Overview */}
         <div className="lg:col-span-5 bg-white p-6 rounded-sm border border-stone-200/90 shadow-subtle space-y-4">
           <div className="flex justify-between items-center border-b border-stone-100 pb-3">
-            <h3 className="font-editorial text-lg text-stone-900 font-normal">Latest Memory Wall Notes</h3>
+            <h3 className="font-editorial text-lg text-stone-900 font-normal">Active Albums</h3>
             <button
-              onClick={() => onNavigate('guestbook')}
+              onClick={() => onNavigate('albums')}
               className="text-xs font-mono text-stone-500 hover:text-stone-900 flex items-center space-x-1"
             >
-              <span>Review ({guestbook?.length})</span>
+              <span>Manage ({albums?.length})</span>
               <ArrowUpRight size={13} />
             </button>
           </div>
 
           <div className="space-y-3">
-            {(guestbook || []).slice(0, 3).map((item) => (
-              <div key={item.id} className="p-3 bg-stone-50 rounded border border-stone-100 text-xs space-y-1">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-stone-900">{item.name}</span>
-                  <span className="text-base">{item.emoji}</span>
+            {(albums || []).slice(0, 4).map((album) => {
+              const albumCount = photos?.filter(p => p.albumId === album.id || p.albumId === album.slug).length || album.photoCount || 0;
+              return (
+                <div
+                  key={album.id}
+                  onClick={() => onNavigate('albums')}
+                  className="p-3 bg-stone-50 hover:bg-stone-100 rounded border border-stone-100 text-xs flex items-center justify-between cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={album.coverImage}
+                      alt={album.title}
+                      className="w-10 h-10 object-cover rounded border border-stone-200"
+                    />
+                    <div>
+                      <span className="font-editorial text-sm font-medium text-stone-900 block">{album.title}</span>
+                      <span className="text-[10px] font-mono text-stone-400">{album.category} • {album.year || '2026'}</span>
+                    </div>
+                  </div>
+                  <span className="text-xs font-mono text-stone-600 bg-white px-2 py-0.5 rounded border border-stone-200">
+                    {albumCount} frames
+                  </span>
                 </div>
-                <p className="text-stone-600 font-light line-clamp-2">"{item.message}"</p>
-                {item.instagram && (
-                  <span className="text-[10px] font-mono text-[#E1306C]">@{item.instagram}</span>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

@@ -18,9 +18,7 @@ export default function AdminLayout({
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'branding', label: 'Brand & Identity', icon: Type },
     { id: 'albums', label: 'Curated Albums', icon: Layers },
-    { id: 'photos', label: 'Photos & EXIF', icon: Camera },
-    { id: 'stories', label: 'Stories & Essays', icon: BookOpen },
-    { id: 'guestbook', label: 'Guestbook & Notes', icon: MessageSquare },
+    { id: 'photos', label: 'Uploads & Captures', icon: Camera },
     { id: 'settings', label: 'Studio Settings', icon: Settings },
   ];
 

@@ -3,15 +3,6 @@ import { Camera, MapPin, Mail, ExternalLink, Award, Sparkles, Sliders } from 'lu
 import InstagramIcon from './InstagramIcon';
 
 export default function AboutSection({ settings }) {
-  const gear = settings?.gearList || [
-    { item: 'Sony Alpha 7 IV', category: 'Camera Body', detail: 'Primary 33MP hybrid full-frame body' },
-    { item: 'FE 35mm f/1.4 GM', category: 'Prime Lens', detail: 'Everyday street, documentary & portrait lens' },
-    { item: 'FE 85mm f/1.8', category: 'Prime Lens', detail: 'Dreamy compression & intimate portraits' },
-    { item: 'Leica M10-R Rangefinder', category: 'Camera Body', detail: 'Analog feel, deliberate manual pacing' },
-    { item: 'Fujifilm X100V', category: 'Everyday Carry', detail: 'Classic Chrome & Black & White film recipes' },
-    { item: 'Black Mist 1/8 Filter', category: 'Filter', detail: 'Subtle halation around warm highlights' }
-  ];
-
   return (
     <section id="about" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-stone-200">
       
@@ -19,14 +10,14 @@ export default function AboutSection({ settings }) {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-stone-200 pb-5">
         <div>
           <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#78716C] mb-2 block">
-            05 / The Photographer
+            03 / The Story Behind
           </span>
           <h2 className="font-editorial text-3xl sm:text-4xl text-[#1C1917] font-normal">
             About Likith
           </h2>
         </div>
         <p className="text-stone-500 text-sm max-w-md mt-2 md:mt-0 font-normal">
-          An ongoing inquiry into how memory, light, and geometry intersect in everyday spaces.
+          Moments, places, people, and memories — collected one frame at a time.
         </p>
       </div>
 
@@ -81,44 +72,30 @@ export default function AboutSection({ settings }) {
           </div>
         </div>
 
-        {/* Right Column: Bio Narrative & Equipment */}
-        <div className="lg:col-span-7 space-y-10">
+        {/* Right Column: Bio Narrative */}
+        <div className="lg:col-span-7 space-y-8">
           
           <div className="space-y-4">
             <h3 className="font-editorial text-2xl sm:text-3xl text-stone-900 font-normal leading-tight">
-              {settings?.bioHeading || 'The human experience in 35mm and ambient light.'}
+              {settings?.bioHeading || 'Collecting moments, places, and memories.'}
             </h3>
 
             <div className="text-stone-600 space-y-4 text-base font-light leading-relaxed whitespace-pre-line">
-              {settings?.aboutBio || `Hey, I'm Likith. Based in India, documenting honest moments across streets, quiet corners, faces, and natural landscapes. What started as an impulse to freeze fleeting seconds has grown into an ongoing visual diary of life as it unfolds.
+              {settings?.aboutBio || `Hey, I'm Likith. Based in Hyderabad, India, documenting honest moments across streets, quiet corners, faces, and natural landscapes. What started as an impulse to freeze fleeting seconds has grown into an ongoing visual diary of life as it unfolds.
 
-Every frame here is personal. No heavy artificial lighting or excessive staging — just available light, subtle film textures, and genuine emotions.`}
+Every capture here is personal — moments, places, and people collected along the way.`}
             </div>
           </div>
 
-          {/* Camera Bag & Working Kit */}
-          <div className="bg-white p-6 sm:p-8 rounded-sm border border-stone-200/80 shadow-subtle space-y-5">
-            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-              <div className="flex items-center space-x-2">
-                <Camera size={16} className="text-stone-900" />
-                <h4 className="font-editorial text-lg text-stone-900 font-normal">In the Camera Bag</h4>
-              </div>
-              <span className="text-[11px] font-mono text-stone-400 uppercase tracking-wider">Gear & Craft</span>
+          {/* Quick Highlight Card */}
+          <div className="bg-white p-6 rounded-sm border border-stone-200/80 shadow-subtle space-y-4">
+            <div className="flex items-center space-x-2 text-stone-900 font-editorial text-lg">
+              <Camera size={16} />
+              <span>A Personal Visual Archive</span>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {gear.map((g, idx) => (
-                <div key={idx} className="p-3 bg-stone-50/70 rounded border border-stone-100">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-medium text-xs text-stone-900">{g.item}</span>
-                    <span className="text-[10px] font-mono uppercase bg-white px-1.5 py-0.5 rounded border border-stone-200 text-stone-500">
-                      {g.category}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-stone-500 font-light">{g.detail}</p>
-                </div>
-              ))}
-            </div>
+            <p className="text-xs text-stone-500 font-mono leading-relaxed">
+              Curated directly for followers, friends, and anyone dropping in from my Instagram bio. Feel free to browse through the albums or inspect individual frames.
+            </p>
           </div>
 
         </div>

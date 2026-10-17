@@ -62,7 +62,7 @@ export default function Hero({
           </div>
           <span className="text-[#D6D3D1]">•</span>
           <div className="flex items-center space-x-2">
-            <span className="text-stone-800 font-medium">35mm & 50mm Ambient Light</span>
+            <span className="text-stone-800 font-medium">Visual Diary & Captures</span>
           </div>
         </div>
 
@@ -74,7 +74,7 @@ export default function Hero({
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Search captures by title, location, camera gear..."
+              placeholder="Search captures by title, place, memory..."
               className="w-full pl-11 pr-4 py-3 rounded-full border border-stone-200 bg-white/90 focus:bg-white text-stone-900 text-sm placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-stone-900 focus:border-stone-900 shadow-sm transition-all"
             />
             {searchQuery && (
