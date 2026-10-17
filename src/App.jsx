@@ -5,8 +5,6 @@ import AlbumGrid from './components/AlbumGrid';
 import AlbumDetail from './components/AlbumDetail';
 import PhotoGrid from './components/PhotoGrid';
 import LightboxModal from './components/LightboxModal';
-import AboutSection from './components/AboutSection';
-import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 
 // Admin Views
@@ -362,14 +360,6 @@ export default function App() {
               isAdmin={isAdminLoggedIn}
               onEditPhoto={handleDirectEditPhoto}
               onDeletePhoto={handleDirectDeletePhoto}
-            />
-
-            <AboutSection
-              settings={settings}
-            />
-
-            <ContactSection
-              settings={settings}
             />
           </>
         )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, Lock, Menu, X, ArrowUpRight, Compass, BookOpen, User, MessageSquare, Send, ShieldCheck, Settings } from 'lucide-react';
+import { Camera, Lock, Menu, X, ArrowUpRight, Compass, Settings } from 'lucide-react';
 import InstagramIcon from './InstagramIcon';
 
 export default function Navbar({ settings, onAdminClick, activeSection, onNavigate, isAdmin, onOpenAdminTab }) {
@@ -16,9 +16,7 @@ export default function Navbar({ settings, onAdminClick, activeSection, onNaviga
 
   const navLinks = [
     { name: 'Albums', href: '#albums', id: 'albums', icon: Compass },
-    { name: 'Gallery', href: '#gallery', id: 'gallery', icon: Camera },
-    { name: 'About', href: '#about', id: 'about', icon: User },
-    { name: 'Contact', href: '#contact', id: 'contact', icon: Send },
+    { name: 'Captures', href: '#gallery', id: 'gallery', icon: Camera }
   ];
 
   const handleLinkClick = (e, item) => {
