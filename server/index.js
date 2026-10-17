@@ -6,7 +6,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from './db.js';
+import { db, UPLOADS_DIR } from './db.js';
 import { signToken, requireAuth } from './auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,16 +21,12 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Static uploads folder
-const uploadsDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 // Multer storage for image uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, uploadsDir);
+    cb(null, UPLOADS_DIR);
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -645,7 +641,12 @@ if (fs.existsSync(distDir)) {
   });
 }
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`[Likith Captures Server] Running on http://localhost:${PORT}`);
-});
+// Export app for serverless environments (e.g. Vercel)
+export default app;
+
+// Start Server if not running inside Vercel serverless environment
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[Likith Captures Server] Running on http://localhost:${PORT}`);
+  });
+}

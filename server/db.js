@@ -6,17 +6,35 @@ import bcrypt from 'bcryptjs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DATA_DIR = path.join(__dirname, '../data');
+const IS_VERCEL = Boolean(process.env.VERCEL);
+const DATA_DIR = IS_VERCEL ? '/tmp/data' : path.join(__dirname, '../data');
 const DB_FILE = path.join(DATA_DIR, 'database.json');
-const UPLOADS_DIR = path.join(__dirname, '../uploads');
+const UPLOADS_DIR = IS_VERCEL ? '/tmp/uploads' : path.join(__dirname, '../uploads');
 
 // Ensure directories exist
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+} catch (e) {}
+
+try {
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  }
+} catch (e) {}
+
+// On Vercel, copy packaged data/database.json to /tmp/data/database.json if not present
+if (IS_VERCEL && !fs.existsSync(DB_FILE)) {
+  const bundledDb = path.join(__dirname, '../data/database.json');
+  if (fs.existsSync(bundledDb)) {
+    try {
+      fs.copyFileSync(bundledDb, DB_FILE);
+    } catch (e) {}
+  }
 }
-if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-}
+
+export { UPLOADS_DIR };
 
 function getInitialData() {
   const salt = bcrypt.genSaltSync(10);
