@@ -8,12 +8,31 @@ function getAuthHeaders() {
   };
 }
 
+async function parseResponse(res, defaultError = 'Request failed') {
+  const text = await res.text();
+  let data = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    // Non-JSON response (e.g., 413 Request Entity Too Large, 502, 504 HTML error)
+  }
+
+  if (!res.ok) {
+    if (res.status === 413) {
+      throw new Error('Image size is too large for upload (server payload limit). Please try uploading images individually.');
+    }
+    const message = data?.error || data?.message || (text && text.length < 150 ? text : defaultError);
+    throw new Error(message);
+  }
+
+  return data;
+}
+
 export const api = {
   // Settings & Branding
   async getSettings() {
     const res = await fetch(`${API_BASE}/settings`);
-    if (!res.ok) throw new Error('Failed to load settings');
-    return res.json();
+    return parseResponse(res, 'Failed to load settings');
   },
 
   async updateSettings(settings) {
@@ -22,11 +41,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(settings)
     });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Failed to update settings');
-    }
-    return res.json();
+    return parseResponse(res, 'Failed to update settings');
   },
 
   // Albums
@@ -129,6 +144,20 @@ export const api = {
   },
 
   // File Upload
+  async uploadSinglePhoto(file) {
+    const formData = new FormData();
+    formData.append('photos', file);
+
+    const token = localStorage.getItem('likith_token');
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData
+    });
+
+    return parseResponse(res, 'File upload failed');
+  },
+
   async uploadPhotos(files) {
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
@@ -142,11 +171,7 @@ export const api = {
       body: formData
     });
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Upload failed');
-    }
-    return res.json();
+    return parseResponse(res, 'Upload failed');
   },
 
   // Stories / Journal

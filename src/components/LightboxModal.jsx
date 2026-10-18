@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  X, ChevronLeft, ChevronRight, Heart, Share2, Download,
-  MapPin, Calendar, Camera, Info, Check, Edit2, Trash2
+  X, ChevronLeft, ChevronRight, Heart, Share2,
+  MapPin, Calendar, Check, Edit2, Trash2, Info
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
 export default function LightboxModal({
   photo,
-  photos,
+  photos = [],
   isOpen,
   onClose,
   onNext,
@@ -19,7 +18,7 @@ export default function LightboxModal({
   onDeletePhoto
 }) {
   const [copied, setCopied] = useState(false);
-  const [showInfo, setShowInfo] = useState(true);
+  const [showDetails, setShowDetails] = useState(false);
 
   // Keyboard navigation
   useEffect(() => {
@@ -37,53 +36,49 @@ export default function LightboxModal({
 
   if (!isOpen || !photo) return null;
 
-  const handleShare = () => {
+  const currentIndex = photos.findIndex(p => p.id === photo.id);
+  const hasMultiple = photos.length > 1;
+
+  const handleShare = (e) => {
+    e.stopPropagation();
     const url = window.location.href.split('#')[0] + `?photo=${photo.id}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const triggerLike = () => {
-    onLike(photo.id);
-    confetti({
-      particleCount: 25,
-      spread: 60,
-      origin: { y: 0.8 }
-    });
-  };
+  const hasMeta = Boolean(photo.caption || photo.location || photo.captureDate);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/95 backdrop-blur-xl animate-fadeIn select-none">
-      
-      {/* Top Floating Action Bar */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4 sm:p-6 text-stone-200">
-        <div className="flex items-center space-x-3">
-          <span className="font-mono text-xs uppercase tracking-wider text-stone-400">
-            {photos.findIndex(p => p.id === photo.id) + 1} of {photos.length}
-          </span>
-          <span className="text-stone-600">•</span>
-          <span className="text-xs font-mono text-stone-300 hidden sm:inline">
-            {photo.category || 'Capture'}
-          </span>
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex flex-col justify-between bg-black/95 text-stone-100 select-none animate-fadeIn cursor-zoom-out p-3 sm:p-6"
+    >
+      {/* Top Bar: Counter & Controls */}
+      <div
+        className="w-full flex items-center justify-between text-xs text-stone-400 z-20 cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="font-mono text-[11px] sm:text-xs tracking-wider text-stone-400">
+          {currentIndex !== -1 ? `${currentIndex + 1} / ${photos.length}` : ''}
         </div>
 
-        <div className="flex items-center space-x-2">
-          {/* Admin Edit & Delete Actions */}
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          {/* Admin Edit/Delete */}
           {isAdmin && (
-            <div className="flex items-center space-x-1 mr-2 bg-stone-900 border border-stone-700 rounded-full px-2 py-0.5">
+            <div className="flex items-center space-x-2 bg-stone-900/90 border border-stone-800 rounded px-2 py-1">
               <button
                 onClick={() => {
                   onClose();
-                  onEditPhoto && onEditPhoto(photo);
+                  if (onEditPhoto) onEditPhoto(photo);
                 }}
-                className="p-1.5 text-stone-300 hover:text-white rounded-full flex items-center space-x-1 text-xs font-mono"
-                title="Edit Frame Metadata & EXIF"
+                className="text-stone-300 hover:text-white flex items-center space-x-1 text-[11px]"
+                title="Edit Photo"
               >
-                <Edit2 size={13} />
-                <span>Edit Frame</span>
+                <Edit2 size={11} />
+                <span>edit</span>
               </button>
-              <span className="text-stone-700">•</span>
+              <span className="text-stone-700">|</span>
               <button
                 onClick={() => {
                   if (onDeletePhoto) {
@@ -91,230 +86,125 @@ export default function LightboxModal({
                     onClose();
                   }
                 }}
-                className="p-1.5 text-rose-400 hover:text-rose-200 rounded-full flex items-center space-x-1 text-xs font-mono"
-                title="Delete Frame"
+                className="text-rose-400 hover:text-rose-300 flex items-center space-x-1 text-[11px]"
+                title="Delete Photo"
               >
-                <Trash2 size={13} />
-                <span>Delete</span>
+                <Trash2 size={11} />
+                <span>del</span>
               </button>
             </div>
           )}
 
-          {/* Toggle Metadata Panel */}
-          <button
-            onClick={() => setShowInfo(!showInfo)}
-            className={`p-2 rounded-full transition-colors ${
-              showInfo ? 'bg-stone-800 text-white' : 'text-stone-400 hover:text-white hover:bg-stone-800/60'
-            }`}
-            title="Toggle Photography Details"
-          >
-            <Info size={18} />
-          </button>
+          {/* Toggle Details (if meta exists) */}
+          {hasMeta && (
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className={`p-1.5 rounded transition-colors ${
+                showDetails ? 'text-white bg-stone-800' : 'text-stone-400 hover:text-white'
+              }`}
+              title="Toggle Details"
+            >
+              <Info size={15} />
+            </button>
+          )}
 
           {/* Share */}
           <button
             onClick={handleShare}
-            className="p-2 text-stone-400 hover:text-white hover:bg-stone-800/60 rounded-full transition-colors relative"
-            title="Copy Direct Link"
+            className="p-1.5 text-stone-400 hover:text-white transition-colors relative"
+            title="Copy photo link"
           >
-            {copied ? <Check size={18} className="text-emerald-400" /> : <Share2 size={18} />}
-            {copied && (
-              <span className="absolute -bottom-8 right-0 text-[11px] font-mono bg-stone-800 text-emerald-300 px-2 py-0.5 rounded shadow whitespace-nowrap">
-                Link copied!
-              </span>
-            )}
+            {copied ? <Check size={15} className="text-emerald-400" /> : <Share2 size={15} />}
           </button>
 
-          {/* Close */}
+          {/* Close Button */}
           <button
             onClick={onClose}
-            className="p-2 text-stone-400 hover:text-white hover:bg-stone-800 rounded-full transition-colors ml-2"
-            title="Close (Esc)"
+            className="p-1.5 text-stone-400 hover:text-white transition-colors"
+            title="Close viewer (Esc)"
           >
-            <X size={22} />
+            <X size={20} />
           </button>
         </div>
       </div>
 
-      {/* Main Body: Image Stage + Details Inspector */}
-      <div className="w-full h-full flex flex-col md:flex-row pt-16 pb-6 px-4 sm:px-6">
-        
-        {/* Left / Center Image Stage */}
-        <div className="relative flex-1 flex items-center justify-center min-h-0 overflow-hidden">
-          
-          {/* Prev Arrow */}
+      {/* Main Image Stage */}
+      <div
+        className="relative flex-1 flex items-center justify-center my-auto min-h-0 overflow-hidden cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Previous Button */}
+        {hasMultiple && (
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onPrev();
-            }}
-            className="absolute left-2 sm:left-4 z-10 p-3 rounded-full bg-black/40 text-stone-300 hover:text-white hover:bg-black/80 backdrop-blur-md transition-all shadow-lg"
-            title="Previous Frame (Left Arrow)"
+            onClick={onPrev}
+            className="absolute left-1 sm:left-4 z-10 p-2 sm:p-3 rounded-full text-stone-400 hover:text-white hover:bg-stone-900/60 transition-all"
+            title="Previous (Left Arrow)"
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={28} />
           </button>
-
-          {/* The Photograph */}
-          <img
-            src={photo.imageUrl}
-            alt={photo.title}
-            className="max-h-[82vh] max-w-full object-contain rounded-sm shadow-2xl transition-all duration-300"
-          />
-
-          {/* Next Arrow */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onNext();
-            }}
-            className="absolute right-2 sm:right-4 z-10 p-3 rounded-full bg-black/40 text-stone-300 hover:text-white hover:bg-black/80 backdrop-blur-md transition-all shadow-lg"
-            title="Next Frame (Right Arrow)"
-          >
-            <ChevronRight size={24} />
-          </button>
-        </div>
-
-        {/* Right Details Panel (collapsible) */}
-        {showInfo && (
-          <div className="w-full md:w-96 md:min-w-[340px] max-h-[82vh] overflow-y-auto bg-stone-900/90 border border-stone-800 rounded-sm p-6 text-stone-300 flex flex-col justify-between mt-4 md:mt-0 md:ml-6 shadow-2xl animate-fadeIn">
-            
-            {/* Upper Content */}
-            <div className="space-y-6">
-              
-              {/* Title & Category */}
-              <div>
-                <div className="flex items-center space-x-2 text-xs font-mono text-stone-400 uppercase tracking-wider mb-2">
-                  <span>{photo.category}</span>
-                  {photo.filmSimulation && (
-                    <>
-                      <span>•</span>
-                      <span className="text-amber-400/90">{photo.filmSimulation}</span>
-                    </>
-                  )}
-                </div>
-                <h2 className="font-editorial text-2xl sm:text-3xl text-white font-normal leading-tight">
-                  {photo.title}
-                </h2>
-              </div>
-
-              {/* Story / Caption */}
-              {photo.caption && (
-                <div className="border-l-2 border-stone-700 pl-4 py-1">
-                  <p className="text-stone-300 text-sm leading-relaxed font-light italic">
-                    "{photo.caption}"
-                  </p>
-                </div>
-              )}
-
-              {/* Date & Location */}
-              <div className="space-y-2 text-xs font-mono text-stone-400">
-                {photo.location && (
-                  <div className="flex items-center space-x-2">
-                    <MapPin size={13} className="text-rose-400" />
-                    <span>{photo.location}</span>
-                  </div>
-                )}
-                {photo.captureDate && (
-                  <div className="flex items-center space-x-2">
-                    <Calendar size={13} className="text-stone-400" />
-                    <span>Captured on {photo.captureDate}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Capture Details Card */}
-              <div className="bg-stone-950/70 border border-stone-800/80 rounded p-4 space-y-2 font-mono text-xs">
-                <div className="flex items-center justify-between border-b border-stone-800 pb-2 text-stone-400 uppercase tracking-wider text-[11px]">
-                  <span>Frame Details</span>
-                  <span className="text-stone-500">Archive</span>
-                </div>
-
-                <div className="space-y-1.5 text-stone-300 pt-1 text-xs">
-                  {photo.category && (
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Category:</span>
-                      <span className="text-stone-200">{photo.category}</span>
-                    </div>
-                  )}
-                  {photo.location && (
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Location:</span>
-                      <span className="text-stone-200">{photo.location}</span>
-                    </div>
-                  )}
-                  {photo.captureDate && (
-                    <div className="flex justify-between">
-                      <span className="text-stone-500">Date:</span>
-                      <span className="text-stone-200">{photo.captureDate}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-            </div>
-
-            {/* Bottom Actions: Like, Admin Edit/Delete & Direct Download */}
-            <div className="pt-6 border-t border-stone-800 mt-6 flex flex-col space-y-3">
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={triggerLike}
-                  className={`flex items-center space-x-2 px-4 py-2.5 rounded-full font-medium text-xs transition-all ${
-                    isLiked
-                      ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20'
-                      : 'bg-stone-800 text-stone-200 hover:bg-rose-600 hover:text-white'
-                  }`}
-                >
-                  <Heart size={14} className={isLiked ? 'fill-current' : ''} />
-                  <span>{photo.likes || 0} Likes</span>
-                </button>
-
-                <a
-                  href={photo.imageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  className="flex items-center space-x-1.5 text-xs text-stone-400 hover:text-white font-mono transition-colors"
-                  title="View High Resolution Source"
-                >
-                  <Download size={14} />
-                  <span>Original</span>
-                </a>
-              </div>
-
-              {isAdmin && (
-                <div className="pt-2 border-t border-stone-800 flex justify-between items-center text-xs font-mono">
-                  <span className="text-emerald-400 text-[11px]">Admin Tools:</span>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => {
-                        onClose();
-                        onEditPhoto && onEditPhoto(photo);
-                      }}
-                      className="px-3 py-1 bg-stone-800 hover:bg-stone-700 text-stone-200 rounded flex items-center space-x-1"
-                    >
-                      <Edit2 size={11} />
-                      <span>Edit Info</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (onDeletePhoto) {
-                          onDeletePhoto(photo.id, photo.title);
-                          onClose();
-                        }
-                      }}
-                      className="px-3 py-1 bg-rose-900/60 hover:bg-rose-900 text-rose-200 rounded flex items-center space-x-1"
-                    >
-                      <Trash2 size={11} />
-                      <span>Delete</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-          </div>
         )}
 
+        {/* Full Photograph */}
+        <img
+          src={photo.imageUrl}
+          alt={photo.title || 'Photograph'}
+          className="max-h-[82vh] max-w-[92vw] sm:max-w-[85vw] object-contain block mx-auto shadow-2xl transition-all duration-300"
+        />
+
+        {/* Next Button */}
+        {hasMultiple && (
+          <button
+            onClick={onNext}
+            className="absolute right-1 sm:right-4 z-10 p-2 sm:p-3 rounded-full text-stone-400 hover:text-white hover:bg-stone-900/60 transition-all"
+            title="Next (Right Arrow)"
+          >
+            <ChevronRight size={28} />
+          </button>
+        )}
+      </div>
+
+      {/* Bottom Bar: Caption, Details & Like */}
+      <div
+        className="w-full max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-stone-400 pt-2 sm:pt-4 z-20 cursor-default gap-2"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="text-center sm:text-left truncate max-w-xl">
+          {photo.title && (
+            <span className="text-stone-200 font-normal mr-2">
+              {photo.title}
+            </span>
+          )}
+          {photo.caption && (
+            <span className="text-stone-400 font-light italic mr-2">
+              "{photo.caption}"
+            </span>
+          )}
+          {photo.location && (
+            <span className="inline-flex items-center text-stone-400 text-[11px] mr-2">
+              <MapPin size={10} className="mr-0.5 opacity-70" />
+              {photo.location}
+            </span>
+          )}
+          {photo.captureDate && (
+            <span className="text-stone-500 text-[11px]">
+              {photo.captureDate}
+            </span>
+          )}
+        </div>
+
+        {/* Like Button */}
+        <button
+          onClick={() => onLike && onLike(photo.id)}
+          className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded transition-colors text-xs ${
+            isLiked
+              ? 'text-rose-400'
+              : 'text-stone-400 hover:text-stone-200'
+          }`}
+          title="Like photograph"
+        >
+          <Heart size={13} className={isLiked ? 'fill-current' : ''} />
+          <span>{photo.likes || 0}</span>
+        </button>
       </div>
 
     </div>

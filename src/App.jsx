@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import AlbumGrid from './components/AlbumGrid';
 import AlbumDetail from './components/AlbumDetail';
 import PhotoGrid from './components/PhotoGrid';
 import LightboxModal from './components/LightboxModal';
@@ -17,7 +16,7 @@ import AdminPhotos from './admin/AdminPhotos';
 import AdminSettings from './admin/AdminSettings';
 
 import { api } from './api';
-import { Settings, Plus, Camera, Layers, LogOut } from 'lucide-react';
+import { Settings, Camera, Layers, LogOut } from 'lucide-react';
 
 export default function App() {
   // App Data State
@@ -32,9 +31,6 @@ export default function App() {
   const [viewMode, setViewMode] = useState('public'); // 'public' | 'admin'
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [activePhoto, setActivePhoto] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeSection, setActiveSection] = useState('home');
 
   // Admin Dashboard State
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -94,16 +90,13 @@ export default function App() {
     }
   }, []);
 
-  // Sync title and favicon
+  // Sync title
   useEffect(() => {
-    if (settings) {
-      document.title = `${settings.fullName || 'THUDURI LIKITH GOUD'} — ${settings.brandName || 'likith.'} (${settings.tagline || 'into my captures'})`;
-    }
-  }, [settings]);
+    document.title = 'likith. — A life of my own, in little frames.';
+  }, []);
 
   // Handle Likes
   const handleLikePhoto = async (photoId) => {
-    // Optimistic UI update
     setPhotos(prev =>
       prev.map(p => (p.id === photoId ? { ...p, likes: (p.likes || 0) + 1 } : p))
     );
@@ -129,7 +122,7 @@ export default function App() {
     if (!activePhoto) return;
     const currentList = selectedAlbum
       ? photos.filter(p => p.albumId === selectedAlbum.id || p.albumId === selectedAlbum.slug)
-      : filteredPhotos;
+      : photos;
     const idx = currentList.findIndex(p => p.id === activePhoto.id);
     if (idx !== -1 && idx < currentList.length - 1) {
       setActivePhoto(currentList[idx + 1]);
@@ -142,7 +135,7 @@ export default function App() {
     if (!activePhoto) return;
     const currentList = selectedAlbum
       ? photos.filter(p => p.albumId === selectedAlbum.id || p.albumId === selectedAlbum.slug)
-      : filteredPhotos;
+      : photos;
     const idx = currentList.findIndex(p => p.id === activePhoto.id);
     if (idx > 0) {
       setActivePhoto(currentList[idx - 1]);
@@ -150,18 +143,6 @@ export default function App() {
       setActivePhoto(currentList[currentList.length - 1]);
     }
   };
-
-  // Filtered Photos for Home stream
-  const filteredPhotos = photos.filter(p => {
-    const matchesCat = selectedCategory === 'all' || (p.category && p.category.toLowerCase() === selectedCategory.toLowerCase());
-    const matchesSearch = !searchQuery ||
-      p.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.caption?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.camera?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.lens?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCat && matchesSearch;
-  });
 
   // Direct Edit & Delete Handlers
   const handleDirectEditAlbum = (album) => {
@@ -225,12 +206,11 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center space-y-4">
-        <div className="w-8 h-8 rounded-full border-2 border-stone-800 border-t-transparent animate-spin"></div>
-        <p className="font-editorial text-2xl font-bold tracking-wider text-stone-900 uppercase">
-          THUDURI LIKITH GOUD
+      <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center space-y-3">
+        <div className="w-5 h-5 rounded-full border-2 border-stone-800 border-t-transparent animate-spin"></div>
+        <p className="font-editorial text-lg text-stone-900 lowercase tracking-tight">
+          likith.
         </p>
-        <span className="text-xs font-mono uppercase tracking-[0.2em] text-stone-400">into my captures...</span>
       </div>
     );
   }
@@ -292,24 +272,18 @@ export default function App() {
   }
 
   // ==========================================
-  // RENDER: PUBLIC PHOTOGRAPHY WEBSITE
+  // RENDER: PUBLIC PHOTOGRAPHY WEBSITE (VSCO-INSPIRED)
   // ==========================================
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#1C1917] flex flex-col justify-between selection:bg-[#1C1917] selection:text-white">
       
-      {/* Sticky Editorial Navigation */}
+      {/* Sticky Minimal Navigation */}
       <Navbar
         settings={settings}
         onAdminClick={handleOpenAdmin}
-        activeSection={activeSection}
         isAdmin={isAdminLoggedIn}
-        onOpenAdminTab={(tab) => {
-          setAdminTab(tab);
-          setViewMode('admin');
-        }}
         onNavigate={(sec) => {
           setSelectedAlbum(null);
-          setActiveSection(sec);
           if (sec === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
@@ -326,23 +300,21 @@ export default function App() {
             }}
             onPhotoClick={(photo) => setActivePhoto(photo)}
             onLikePhoto={handleLikePhoto}
+            likedPhotoIds={likedPhotoIds}
+            isAdmin={isAdminLoggedIn}
+            onEditPhoto={handleDirectEditPhoto}
+            onDeletePhoto={handleDirectDeletePhoto}
           />
         ) : (
-          /* Public Homepage */
+          /* Public Homepage: Tagline Introduction immediately followed by Main Photo Gallery */
           <>
             <Hero
-              settings={settings}
-            />
-
-            <AlbumGrid
               albums={albums}
+              selectedAlbumId={selectedAlbum?.id || 'all'}
               onSelectAlbum={(album) => {
                 setSelectedAlbum(album);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              isAdmin={isAdminLoggedIn}
-              onEditAlbum={handleDirectEditAlbum}
-              onDeleteAlbum={handleDirectDeleteAlbum}
             />
 
             <PhotoGrid
@@ -360,13 +332,13 @@ export default function App() {
 
       {/* Floating Admin Toolbar for Quick Edit/Delete/Upload Actions */}
       {isAdminLoggedIn && (
-        <div className="fixed bottom-5 right-5 z-40 bg-stone-900/95 backdrop-blur-md text-white px-4 py-2.5 rounded-full shadow-2xl border border-stone-700 flex items-center space-x-3 text-xs font-mono animate-fadeIn">
+        <div className="fixed bottom-4 right-4 z-40 bg-stone-900/90 backdrop-blur-md text-white px-3.5 py-2 rounded-full shadow-xl border border-stone-800 flex items-center space-x-3 text-xs font-mono animate-fadeIn">
           <span className="flex items-center space-x-1.5 text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="font-semibold hidden sm:inline">Admin Active</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="font-semibold hidden sm:inline">Admin</span>
           </span>
 
-          <span className="text-stone-600">|</span>
+          <span className="text-stone-700">|</span>
 
           <button
             onClick={() => {
@@ -377,7 +349,7 @@ export default function App() {
             title="Open Full CMS Studio"
           >
             <Settings size={13} />
-            <span>Studio CMS</span>
+            <span>Studio</span>
           </button>
 
           <button
@@ -414,16 +386,16 @@ export default function App() {
         </div>
       )}
 
-      {/* Editorial Footer */}
+      {/* Minimal Footer */}
       <Footer
         settings={settings}
         onAdminClick={handleOpenAdmin}
       />
 
-      {/* Lightbox Inspector Modal */}
+      {/* Lightbox Modal */}
       <LightboxModal
         photo={activePhoto}
-        photos={selectedAlbum ? photos.filter(p => p.albumId === selectedAlbum.id || p.albumId === selectedAlbum.slug) : filteredPhotos}
+        photos={selectedAlbum ? photos.filter(p => p.albumId === selectedAlbum.id || p.albumId === selectedAlbum.slug) : photos}
         isOpen={Boolean(activePhoto)}
         onClose={() => setActivePhoto(null)}
         onNext={handleNextPhoto}
