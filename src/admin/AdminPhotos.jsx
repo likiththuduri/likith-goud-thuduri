@@ -186,11 +186,8 @@ export default function AdminPhotos({ photos, albums, onPhotosUpdated }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-5">
         <div>
           <h2 className="font-editorial text-2xl sm:text-3xl text-stone-900 font-normal">
-            Photographs & Captures Manager
+            Upload Images
           </h2>
-          <p className="text-stone-500 text-xs font-mono mt-1">
-            Upload high-resolution images, curate camera EXIF gear details, and organize into albums.
-          </p>
         </div>
 
         <div className="flex items-center space-x-3">
@@ -359,7 +356,7 @@ export default function AdminPhotos({ photos, albums, onPhotosUpdated }) {
             </button>
 
             <h3 className="font-editorial text-2xl text-stone-900 mb-6">
-              {editingPhoto ? 'Edit Photo & EXIF Specs' : 'Add New Photograph Frame'}
+              {editingPhoto ? 'Edit Image' : 'Add New Image'}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -462,7 +459,7 @@ export default function AdminPhotos({ photos, albums, onPhotosUpdated }) {
                   disabled={loading}
                   className="px-6 py-2.5 bg-stone-900 hover:bg-stone-800 text-stone-100 rounded text-xs font-mono uppercase tracking-wider disabled:opacity-50"
                 >
-                  {loading ? 'Saving...' : editingPhoto ? 'Update Photo' : 'Add to Portfolio'}
+                  {loading ? 'Saving...' : editingPhoto ? 'Update Image' : 'Add Image'}
                 </button>
               </div>
 

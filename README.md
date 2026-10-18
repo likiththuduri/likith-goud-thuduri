@@ -25,8 +25,8 @@ Designed to serve as the centerpiece of an Instagram bio, featuring zero-code cu
      - Instagram Link: `https://www.instagram.com/likith_thuduri/`
      - Location, Email, Camera Bag Gear, and Footer Text.
 
-3. **Clickable Curated Albums**
-   - Thematic collections (Street & Neon, Portraits, Monochrome, Wanderlust, Architecture, Golden Hours).
+3. **Curated Albums**
+   - Personal collections and albums.
    - Dedicated album view with album cover banner, narrative description, location, shoot gear, and photo stream.
 
 4. **Editorial Lightbox Inspector**

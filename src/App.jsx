@@ -308,14 +308,7 @@ export default function App() {
         ) : (
           /* Public Homepage: Tagline Introduction immediately followed by Main Photo Gallery */
           <>
-            <Hero
-              albums={albums}
-              selectedAlbumId={selectedAlbum?.id || 'all'}
-              onSelectAlbum={(album) => {
-                setSelectedAlbum(album);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
+            <Hero />
 
             <PhotoGrid
               photos={photos}

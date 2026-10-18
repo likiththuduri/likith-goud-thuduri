@@ -80,81 +80,16 @@ function getInitialData() {
     albums: [
       {
         id: 'album-1',
-        title: 'Silent Streets & Midnight Neons',
-        slug: 'silent-streets',
-        description: 'Night walks through dimly lit alleys, neon reflections after downpours, and quiet solitary moments in bustling metropolises.',
+        title: 'General',
+        slug: 'general',
+        description: 'Visual captures collection.',
         coverImage: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1400&q=80',
-        category: 'Street',
-        location: 'Tokyo & Mumbai',
-        year: '2025 – 2026',
+        category: 'Captures',
+        location: 'Hyderabad, India',
+        year: '2026',
         featured: true,
-        photoCount: 5,
+        photoCount: 15,
         createdAt: '2026-01-15T10:00:00.000Z'
-      },
-      {
-        id: 'album-2',
-        title: 'Portraits in Ambient Light',
-        slug: 'ambient-portraits',
-        description: 'Unposed, quiet expressions captured solely under morning window light, golden hour, and natural surroundings.',
-        coverImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1400&q=80',
-        category: 'Portraits',
-        location: 'Studio & Natural Light',
-        year: '2025 – 2026',
-        featured: true,
-        photoCount: 4,
-        createdAt: '2026-01-18T12:00:00.000Z'
-      },
-      {
-        id: 'album-3',
-        title: 'Monochrome Echoes',
-        slug: 'monochrome-echoes',
-        description: 'Stripping away color to uncover geometry, raw textures, deep silver gelatin tones, and shadow play.',
-        coverImage: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1400&q=80',
-        category: 'Monochrome',
-        location: 'Various Locations',
-        year: '2024 – 2026',
-        featured: true,
-        photoCount: 4,
-        createdAt: '2026-01-20T14:00:00.000Z'
-      },
-      {
-        id: 'album-4',
-        title: 'Wanderlust & Horizons',
-        slug: 'wanderlust-horizons',
-        description: 'Expeditions through rugged Himalayan passes, mist-draped pine valleys, and tranquil mountain dawn light.',
-        coverImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1400&q=80',
-        category: 'Travel',
-        location: 'Ladakh & Himachal',
-        year: '2025',
-        featured: true,
-        photoCount: 4,
-        createdAt: '2026-02-01T08:30:00.000Z'
-      },
-      {
-        id: 'album-5',
-        title: 'Architectural Geometry',
-        slug: 'architectural-geometry',
-        description: 'The harmonious rhythm of concrete, brutalist lines, and shadows sculpted by mid-afternoon sun.',
-        coverImage: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1400&q=80',
-        category: 'Architecture',
-        location: 'Hyderabad & Delhi',
-        year: '2025',
-        featured: false,
-        photoCount: 4,
-        createdAt: '2026-02-10T09:15:00.000Z'
-      },
-      {
-        id: 'album-6',
-        title: 'Fleeting Golden Hours',
-        slug: 'golden-hours',
-        description: 'That gentle 20-minute window before dusk when the sky turns liquid amber and softens everything it touches.',
-        coverImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80',
-        category: 'Moments',
-        location: 'Coastal Escapes',
-        year: '2025 – 2026',
-        featured: true,
-        photoCount: 3,
-        createdAt: '2026-02-14T18:00:00.000Z'
       }
     ],
     photos: [
@@ -271,7 +206,7 @@ function getInitialData() {
       {
         id: 'photo-6',
         title: 'Morning Window Reverie',
-        albumId: 'album-2',
+        albumId: 'album-1',
         category: 'Portraits',
         imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
@@ -293,7 +228,7 @@ function getInitialData() {
       {
         id: 'photo-7',
         title: 'Quiet Contemplation',
-        albumId: 'album-2',
+        albumId: 'album-1',
         category: 'Portraits',
         imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
@@ -315,7 +250,7 @@ function getInitialData() {
       {
         id: 'photo-8',
         title: 'Golden Hour Silhouette',
-        albumId: 'album-2',
+        albumId: 'album-1',
         category: 'Portraits',
         imageUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80',
@@ -337,7 +272,7 @@ function getInitialData() {
       {
         id: 'photo-9',
         title: 'Spontaneous Laughter',
-        albumId: 'album-2',
+        albumId: 'album-1',
         category: 'Portraits',
         imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
@@ -359,7 +294,7 @@ function getInitialData() {
       {
         id: 'photo-10',
         title: 'The Chess Master in Shadow',
-        albumId: 'album-3',
+        albumId: 'album-1',
         category: 'Monochrome',
         imageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80',
@@ -381,7 +316,7 @@ function getInitialData() {
       {
         id: 'photo-11',
         title: 'Geometry & Solitude',
-        albumId: 'album-3',
+        albumId: 'album-1',
         category: 'Monochrome',
         imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
@@ -403,7 +338,7 @@ function getInitialData() {
       {
         id: 'photo-12',
         title: 'Fog over Himalayan Ridge',
-        albumId: 'album-4',
+        albumId: 'album-1',
         category: 'Travel',
         imageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
@@ -425,7 +360,7 @@ function getInitialData() {
       {
         id: 'photo-13',
         title: 'Azure Alpine Waters',
-        albumId: 'album-4',
+        albumId: 'album-1',
         category: 'Travel',
         imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
@@ -447,7 +382,7 @@ function getInitialData() {
       {
         id: 'photo-14',
         title: 'Spiral Staircase Ascendance',
-        albumId: 'album-5',
+        albumId: 'album-1',
         category: 'Architecture',
         imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
@@ -469,7 +404,7 @@ function getInitialData() {
       {
         id: 'photo-15',
         title: 'Amber Dusk over the Coast',
-        albumId: 'album-6',
+        albumId: 'album-1',
         category: 'Moments',
         imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85',
         thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',

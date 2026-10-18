@@ -18,7 +18,7 @@ export default function AdminLayout({
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'branding', label: 'Brand & Identity', icon: Type },
     { id: 'albums', label: 'Curated Albums', icon: Layers },
-    { id: 'photos', label: 'Uploads & Captures', icon: Camera },
+    { id: 'photos', label: 'Upload Images', icon: Camera },
     { id: 'settings', label: 'Studio Settings', icon: Settings },
   ];
 
@@ -44,7 +44,7 @@ export default function AdminLayout({
                 <span className="w-1.5 h-1.5 rounded-full bg-stone-900"></span>
               </div>
               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-stone-400">
-                Studio Studio CMS
+                Studio CMS
               </span>
             </div>
           </div>
