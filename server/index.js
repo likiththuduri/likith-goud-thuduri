@@ -189,7 +189,8 @@ app.get('/api/photos/:id', (req, res) => {
 // Public: Like a photo
 app.post('/api/photos/:id/like', (req, res) => {
   try {
-    const likes = db.likePhoto(req.params.id);
+    const { action } = req.body || {};
+    const likes = db.likePhoto(req.params.id, action);
     if (likes === null) {
       return res.status(404).json({ error: 'Photo not found' });
     }

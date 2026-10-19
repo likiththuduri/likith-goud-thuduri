@@ -95,23 +95,37 @@ export default function App() {
     document.title = 'likith. — A life of my own, in little frames.';
   }, []);
 
-  // Handle Likes
+  // Handle Likes (Single Like / Toggle per User)
   const handleLikePhoto = async (photoId) => {
+    const isCurrentlyLiked = likedPhotoIds.has(photoId);
+    const action = isCurrentlyLiked ? 'unlike' : 'like';
+    const delta = isCurrentlyLiked ? -1 : 1;
+
+    // Optimistic UI update (prevents multiple likes)
     setPhotos(prev =>
-      prev.map(p => (p.id === photoId ? { ...p, likes: (p.likes || 0) + 1 } : p))
+      prev.map(p =>
+        p.id === photoId ? { ...p, likes: Math.max(0, (p.likes || 0) + delta) } : p
+      )
     );
 
     if (activePhoto && activePhoto.id === photoId) {
-      setActivePhoto(prev => ({ ...prev, likes: (prev.likes || 0) + 1 }));
+      setActivePhoto(prev => ({
+        ...prev,
+        likes: Math.max(0, (prev.likes || 0) + delta)
+      }));
     }
 
     const nextLiked = new Set(likedPhotoIds);
-    nextLiked.add(photoId);
+    if (isCurrentlyLiked) {
+      nextLiked.delete(photoId);
+    } else {
+      nextLiked.add(photoId);
+    }
     setLikedPhotoIds(nextLiked);
     localStorage.setItem('likith_liked_photos', JSON.stringify([...nextLiked]));
 
     try {
-      await api.likePhoto(photoId);
+      await api.likePhoto(photoId, action);
     } catch (err) {
       console.error('Failed to record like on server:', err);
     }

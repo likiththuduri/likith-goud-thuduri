@@ -75,12 +75,12 @@ export default function PhotoGrid({
                     }}
                     className={`p-1.5 rounded-full transition-colors ${
                       isLiked
-                        ? 'text-rose-400'
+                        ? 'text-rose-500'
                         : 'text-white/80 hover:text-white'
                     }`}
-                    title="Like"
+                    title={isLiked ? "Unlike" : "Like"}
                   >
-                    <Heart size={14} className={isLiked ? 'fill-current' : ''} />
+                    <Heart size={14} className={isLiked ? 'fill-current text-rose-500' : ''} />
                   </button>
                 </div>
 

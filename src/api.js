@@ -131,11 +131,27 @@ export const api = {
     return res.json();
   },
 
-  async likePhoto(id) {
+  async likePhoto(id, action = 'like') {
     const res = await fetch(`${API_BASE}/photos/${id}/like`, {
-      method: 'POST'
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action })
     });
-    if (!res.ok) throw new Error('Failed to like photo');
+
+    // Also update client-side cache
+    try {
+      const saved = localStorage.getItem('likith_custom_photos');
+      if (saved) {
+        const photos = JSON.parse(saved);
+        const delta = action === 'unlike' ? -1 : 1;
+        const next = photos.map(p =>
+          p.id === id ? { ...p, likes: Math.max(0, (p.likes || 0) + delta) } : p
+        );
+        localStorage.setItem('likith_custom_photos', JSON.stringify(next));
+      }
+    } catch {}
+
+    if (!res.ok) throw new Error('Failed to update like');
     return res.json();
   },
 

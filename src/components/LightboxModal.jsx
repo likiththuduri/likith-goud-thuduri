@@ -192,17 +192,17 @@ export default function LightboxModal({
           )}
         </div>
 
-        {/* Like Button */}
+        {/* Like Button (Toggle single like per user) */}
         <button
           onClick={() => onLike && onLike(photo.id)}
           className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded transition-colors text-xs ${
             isLiked
-              ? 'text-rose-400'
+              ? 'text-rose-500'
               : 'text-stone-400 hover:text-stone-200'
           }`}
-          title="Like photograph"
+          title={isLiked ? "Unlike photograph" : "Like photograph"}
         >
-          <Heart size={13} className={isLiked ? 'fill-current' : ''} />
+          <Heart size={13} className={isLiked ? 'fill-current text-rose-500' : ''} />
           <span>{photo.likes || 0}</span>
         </button>
       </div>

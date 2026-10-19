@@ -328,10 +328,14 @@ class Database {
     return true;
   }
 
-  likePhoto(id) {
+  likePhoto(id, action = 'like') {
     const photo = this.data.photos.find(p => p.id === id);
     if (!photo) return null;
-    photo.likes = (photo.likes || 0) + 1;
+    if (action === 'unlike') {
+      photo.likes = Math.max(0, (photo.likes || 0) - 1);
+    } else {
+      photo.likes = (photo.likes || 0) + 1;
+    }
     this.save();
     return photo.likes;
   }
