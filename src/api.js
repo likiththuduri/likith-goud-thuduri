@@ -95,9 +95,34 @@ export const api = {
     if (filters.search) params.append('search', filters.search);
 
     const query = params.toString() ? `?${params.toString()}` : '';
-    const res = await fetch(`${API_BASE}/photos${query}`);
-    if (!res.ok) throw new Error('Failed to load photos');
-    return res.json();
+    let serverPhotos = [];
+    try {
+      const res = await fetch(`${API_BASE}/photos${query}`);
+      if (res.ok) {
+        serverPhotos = await res.json();
+      }
+    } catch (err) {
+      console.warn('Network error fetching photos from server, using local cache:', err);
+    }
+
+    // Client-side persistent backup
+    try {
+      const saved = localStorage.getItem('likith_custom_photos');
+      const localPhotos = saved ? JSON.parse(saved) : null;
+      if (localPhotos && Array.isArray(localPhotos)) {
+        if (serverPhotos.length === 0 && localPhotos.length > 0) {
+          // If server container reset to empty baseline, restore from persistent local cache
+          return localPhotos;
+        }
+        if (serverPhotos.length > 0) {
+          localStorage.setItem('likith_custom_photos', JSON.stringify(serverPhotos));
+        }
+      } else if (serverPhotos.length > 0) {
+        localStorage.setItem('likith_custom_photos', JSON.stringify(serverPhotos));
+      }
+    } catch {}
+
+    return serverPhotos;
   },
 
   async getPhoto(id) {
@@ -120,8 +145,17 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(photoData)
     });
-    if (!res.ok) throw new Error('Failed to create photo');
-    return res.json();
+    const created = await parseResponse(res, 'Failed to create photo');
+
+    // Backup to persistent local cache
+    try {
+      const saved = localStorage.getItem('likith_custom_photos');
+      const photos = saved ? JSON.parse(saved) : [];
+      const updated = [created, ...photos.filter(p => p.id !== created.id)];
+      localStorage.setItem('likith_custom_photos', JSON.stringify(updated));
+    } catch {}
+
+    return created;
   },
 
   async updatePhoto(id, photoData) {
@@ -130,8 +164,18 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(photoData)
     });
-    if (!res.ok) throw new Error('Failed to update photo');
-    return res.json();
+    const updated = await parseResponse(res, 'Failed to update photo');
+
+    try {
+      const saved = localStorage.getItem('likith_custom_photos');
+      if (saved) {
+        const photos = JSON.parse(saved);
+        const next = photos.map(p => p.id === id ? { ...p, ...updated } : p);
+        localStorage.setItem('likith_custom_photos', JSON.stringify(next));
+      }
+    } catch {}
+
+    return updated;
   },
 
   async deletePhoto(id) {
@@ -139,8 +183,18 @@ export const api = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    if (!res.ok) throw new Error('Failed to delete photo');
-    return res.json();
+    const result = await parseResponse(res, 'Failed to delete photo');
+
+    try {
+      const saved = localStorage.getItem('likith_custom_photos');
+      if (saved) {
+        const photos = JSON.parse(saved);
+        const next = photos.filter(p => p.id !== id);
+        localStorage.setItem('likith_custom_photos', JSON.stringify(next));
+      }
+    } catch {}
+
+    return result;
   },
 
   // File Upload

@@ -4,6 +4,7 @@ import {
   Image as ImageIcon, Check, X, Sliders, ExternalLink, Filter
 } from 'lucide-react';
 import { api } from '../api';
+import { optimizeImage } from '../utils/imageOptimizer';
 
 export default function AdminPhotos({ photos, albums, onPhotosUpdated }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,32 +48,30 @@ export default function AdminPhotos({ photos, albums, onPhotosUpdated }) {
     setUploading(true);
     setError(null);
     try {
-      const res = await api.uploadPhotos(files);
-      const uploadedFiles = res.files || [];
+      const fileList = Array.from(files);
+      let addedCount = 0;
 
-      // Auto-create photo records for each uploaded image
-      for (const file of uploadedFiles) {
+      for (const file of fileList) {
+        // Optimize and compress image to high-quality responsive data URL
+        const { dataUrl } = await optimizeImage(file, 1800, 1800, 0.85);
+        const imageSource = dataUrl || '';
+
         await api.createPhoto({
-          title: file.originalName.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' '),
-          albumId: albums[0]?.id || '',
-          category: 'Street',
-          imageUrl: file.url,
-          thumbnailUrl: file.url,
-          caption: 'Uploaded photograph frame.',
-          location: 'Hyderabad, India',
+          title: file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' '),
+          albumId: albums[0]?.id || 'album-1',
+          category: 'General',
+          imageUrl: imageSource,
+          thumbnailUrl: imageSource,
+          caption: '',
+          location: '',
           captureDate: new Date().toISOString().split('T')[0],
-          camera: 'Sony A7 IV',
-          lens: 'FE 35mm f/1.4 GM',
-          aperture: 'ƒ/1.4',
-          shutterSpeed: '1/250s',
-          iso: '100',
-          focalLength: '35mm',
           featured: true,
           orientation: 'portrait'
         });
+        addedCount++;
       }
 
-      setSuccess(`Successfully uploaded and indexed ${uploadedFiles.length} photo(s)!`);
+      setSuccess(`Successfully uploaded and indexed ${addedCount} photo(s)!`);
       onPhotosUpdated();
       setTimeout(() => setSuccess(null), 4000);
     } catch (err) {

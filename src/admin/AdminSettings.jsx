@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Key, User, ShieldAlert, RotateCcw, Check, Sparkles, HardDrive, Info, Lock } from 'lucide-react';
+import { Key, User, ShieldAlert, RotateCcw, Check, Sparkles, HardDrive, Info, Lock, Download, Copy } from 'lucide-react';
 import { api } from '../api';
 
 export default function AdminSettings({ onResetCompleted }) {
@@ -13,6 +13,29 @@ export default function AdminSettings({ onResetCompleted }) {
 
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(null);
+  const [exportSuccess, setExportSuccess] = useState(false);
+
+  const handleExportData = async () => {
+    try {
+      const [settings, albums, photos] = await Promise.all([
+        api.getSettings(),
+        api.getAlbums(),
+        api.getPhotos()
+      ]);
+      const exportObj = { settings, albums, photos };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `likith-portfolio-backup-${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      setExportSuccess(true);
+      setTimeout(() => setExportSuccess(false), 3000);
+    } catch (e) {
+      alert('Failed to export data: ' + e.message);
+    }
+  };
 
   const handleCredentialsChange = async (e) => {
     e.preventDefault();
@@ -224,6 +247,32 @@ export default function AdminSettings({ onResetCompleted }) {
               <span>{resetLoading ? 'Resetting...' : 'Restore Curated Default Portfolio'}</span>
             </button>
           </div>
+        </div>
+
+        {/* Backup & Export Card */}
+        <div className="bg-white p-6 rounded-sm border border-stone-200/90 shadow-subtle space-y-4 md:col-span-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-stone-100">
+            <div>
+              <h3 className="font-editorial text-lg text-stone-900 flex items-center space-x-2">
+                <Download size={16} className="text-stone-700" />
+                <span>Gallery Backup & Data Export</span>
+              </h3>
+              <p className="text-stone-500 text-xs font-mono mt-0.5">
+                Download a permanent copy of your uploaded images, albums, and branding configuration.
+              </p>
+            </div>
+
+            <button
+              onClick={handleExportData}
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded bg-stone-900 hover:bg-stone-800 text-stone-100 text-xs font-mono uppercase tracking-wider transition-all self-start sm:self-auto"
+            >
+              <Download size={13} />
+              <span>{exportSuccess ? 'Downloaded!' : 'Download Backup JSON'}</span>
+            </button>
+          </div>
+          <p className="text-stone-500 text-xs font-light leading-relaxed">
+            Because Vercel is a serverless platform, downloading this backup file lets you save your photos permanently on your device or commit them directly to GitHub at any time.
+          </p>
         </div>
 
       </div>
